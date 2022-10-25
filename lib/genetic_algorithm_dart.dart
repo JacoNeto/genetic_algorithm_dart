@@ -6,24 +6,35 @@ import 'package:genetic_algorithm_dart/genetic_algorithm/utils.dart';
 import 'genetic_algorithm/pair.dart';
 
 int calculate() {
-  GeneticAlgorithm().start();
+  GeneticAlgorithm(numberOfGenes: 6).start();
   return 0;
 }
 
 class GeneticAlgorithm {
+  final int numberOfGenes;
+
   Population? population;
   List<Chromosome> parents = [];
+  List<Chromosome> children = [];
+  int cutIndex = 0;
+
+  GeneticAlgorithm({required this.numberOfGenes});
 
   void start() {
-    initializePopulation();
-    sortPopulation();
-    selectParents();
+    _initializePopulation();
+    _sortPopulation();
+    _selectParents();
+    while (children.length < population!.individuals.length) {
+      _defineCut();
+      _crossoverParents();
+    }
+    print(children);
   }
 
-  void initializePopulation() {
+  void _initializePopulation() {
     var individuals = <Chromosome>[];
-    for (int i = 0; i < 6; i++) {
-      var pair = Pair(generateRandomBetween(0, 7), generateRandomBetween(0, 7));
+    for (int i = 0; i < numberOfGenes; i++) {
+      var pair = Pair(generateRandomBetween(0, 8), generateRandomBetween(0, 8));
       individuals.add(Chromosome(pair, i, fitness));
     }
 
@@ -32,19 +43,57 @@ class GeneticAlgorithm {
     print(population!);
   }
 
-  void sortPopulation() {
+  void _sortPopulation() {
     population!.sort();
   }
 
-  void selectParents() {
+  void _selectParents() {
     print("Selecionando parentes:");
     parents.add(population!.individuals[0]);
     parents.add(population!.individuals[1]);
 
-    printParents();
+    _printParents();
   }
 
-  void printParents() {
+  void _defineCut() {
+    cutIndex = generateRandomBetween(0, numberOfGenes - 1);
+  }
+
+  void _crossoverParents() {
+    var result = "";
+
+    String parent1 = parents[0].binaryValue;
+    String parent2 = parents[1].binaryValue;
+
+    result += parent1.substring(0, cutIndex);
+    result += parent2.substring(cutIndex, numberOfGenes);
+    result += parent1.substring(cutIndex, numberOfGenes);
+    result += parent2.substring(0, cutIndex);
+
+    print("cut at $cutIndex");
+    print("crossover: $result");
+
+    var child1 = Chromosome.fromBinary(
+        result.substring(0, numberOfGenes), children.length, fitness);
+    children.add(child1);
+    var child2 = Chromosome.fromBinary(
+        result.substring(numberOfGenes, numberOfGenes * 2),
+        children.length,
+        fitness);
+    children.add(child2);
+
+    _updateParents(child1, child2);
+  }
+
+  void _updateParents(Chromosome parent1, Chromosome parent2) {
+    print("\nAtualizando parentes:");
+    parents.clear();
+    parents.addAll([parent1, parent2]);
+
+    _printParents();
+  }
+
+  void _printParents() {
     var auxPop = Population(parents);
     print(auxPop);
   }
