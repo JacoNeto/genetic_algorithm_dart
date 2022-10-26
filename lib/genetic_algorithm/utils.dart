@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:ansicolor/ansicolor.dart';
 import 'package:binary/binary.dart';
+import 'package:genetic_algorithm_dart/genetic_algorithm/chromosome.dart';
 import 'package:genetic_algorithm_dart/genetic_algorithm/pair.dart';
+import 'package:genetic_algorithm_dart/genetic_algorithm/population.dart';
 
 String intToBin(int value) {
   return value.toBinaryPadded(3);
@@ -26,7 +28,7 @@ Pair binToPair(String binaryValue) {
           binaryValue.substring(binaryValue.length ~/ 2, binaryValue.length)));
 }
 
-void printGreen(String text) {
-  AnsiPen pen = AnsiPen()..green(bold: true);
-  print(pen(text));
+Chromosome minFitness(Population? population) {
+  return population!.individuals
+      .reduce((curr, next) => curr.fitness < next.fitness ? curr : next);
 }

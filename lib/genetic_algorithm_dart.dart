@@ -5,10 +5,9 @@ import 'package:genetic_algorithm_dart/genetic_algorithm/population.dart';
 import 'package:genetic_algorithm_dart/genetic_algorithm/utils.dart';
 
 import 'genetic_algorithm/pair.dart';
-import 'dart:math';
 
 int calculate() {
-  GeneticAlgorithm(numberOfGenes: 6, populationSize: 8, fitness: fitness)
+  GeneticAlgorithm(numberOfGenes: 6, populationSize: 10, fitness: fitness)
       .start();
   return 0;
 }
@@ -30,8 +29,8 @@ class GeneticAlgorithm {
 
   void start() {
     _initializePopulation();
-
-    for (int i = 0; i < 3; i++) {
+    int i = 0;
+    while (minFitness(population).fitness > 0) {
       _sortPopulation();
       _selectParents();
       while (children.length < population!.individuals.length) {
@@ -41,6 +40,7 @@ class GeneticAlgorithm {
       _updatePopulation();
       _printGeneration(i + 2, population);
       _clearGeneration();
+      i++;
     }
   }
 
@@ -53,7 +53,7 @@ class GeneticAlgorithm {
 
     print("\nInicializando a População:");
     population = Population(individuals);
-    print(population!);
+    _printPopulation();
   }
 
   void _sortPopulation() {
@@ -144,10 +144,7 @@ class GeneticAlgorithm {
   }
 
   void _printPopulation() {
-    var minFitness = population!.individuals
-        .reduce((curr, next) => curr.fitness < next.fitness ? curr : next);
-    var indexOfMin = population!.individuals.indexOf(minFitness);
-    print(minFitness.toString() + indexOfMin.toString());
+    var indexOfMin = population!.individuals.indexOf(minFitness(population));
     var populationLines = population.toString().split('\n');
 
     AnsiPen pen = AnsiPen()..green(bold: true);
