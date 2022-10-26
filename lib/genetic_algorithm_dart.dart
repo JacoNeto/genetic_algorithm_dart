@@ -13,20 +13,23 @@ int calculate() {
 }
 
 class GeneticAlgorithm {
-  final int numberOfGenes;
-  final int populationSize;
-  final double Function(int x, int y) fitness;
+  final int numberOfGenes; // number of genes in each chromosome
+  final int populationSize; // population size
+  final double Function(int x, int y) fitness; // fitness function
 
-  Population? population;
-  List<Chromosome> parents = [];
-  List<Chromosome> children = [];
-  int cutIndex = 0;
+  Population? population; // Population of the current generation
+  List<Chromosome> parents = []; // Current parents
+  List<Chromosome> children = []; // Current children
 
+  int cutIndex = 0; // index being cutted in the crossover
+
+  // Default constructor
   GeneticAlgorithm(
       {required this.numberOfGenes,
       required this.populationSize,
       required this.fitness});
 
+  // Code execution
   void start() {
     _initializePopulation();
     int i = 0;
@@ -44,6 +47,7 @@ class GeneticAlgorithm {
     }
   }
 
+  // Initualize the population with chromossomes created from random pair values
   void _initializePopulation() {
     var individuals = <Chromosome>[];
     for (int i = 0; i < populationSize; i++) {
@@ -56,10 +60,12 @@ class GeneticAlgorithm {
     _printPopulation();
   }
 
+  // sort population in ascending order
   void _sortPopulation() {
     population!.sort();
   }
 
+  // select two chromossomes with most probability to be the parents
   void _selectParents() {
     print("Selecionando pais:");
     parents.add(population!.individuals[0]);
@@ -68,10 +74,12 @@ class GeneticAlgorithm {
     _printParents();
   }
 
+  // define randomly the position of the cut to the crossover
   void _defineCut() {
     cutIndex = generateRandomBetween(0, numberOfGenes - 1);
   }
 
+  // crossover procedure
   void _crossoverParents() {
     var result = "";
 
@@ -101,6 +109,7 @@ class GeneticAlgorithm {
     _updateParents(child1, child2);
   }
 
+  // mutation procedure (5% probability)
   Chromosome _mutate(Chromosome child) {
     int aux = 0;
     final oldChild = child.binaryValue;
@@ -138,6 +147,15 @@ class GeneticAlgorithm {
     children.clear();
   }
 
+  /*
+  *
+  *
+  *
+  * Exibition functions
+  *
+  *
+  *
+  */
   void _printParents() {
     var auxPop = Population(parents);
     print(auxPop);

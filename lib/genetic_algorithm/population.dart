@@ -1,5 +1,10 @@
 import 'package:genetic_algorithm_dart/genetic_algorithm/chromosome.dart';
 
+/*
+  This class encapsulates a list of Chromosomes and the operations
+  that can be done with it.
+*/
+
 class Population {
   List<Chromosome> individuals;
 
@@ -15,6 +20,7 @@ class Population {
     return str;
   }
 
+  // sort individuals in decrescent order
   void sort() {
     individuals.sort((a, b) => a.fitness.compareTo(b.fitness));
   }
