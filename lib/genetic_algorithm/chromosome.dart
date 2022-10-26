@@ -12,6 +12,7 @@ class Chromosome {
   String binaryValue; // value as a binary representation
   double fitness; // fitness of the value
   int id; // identifier
+  double? probability;
 
   /// Default constructor. Receives a value as a [pair], an identifier [id] and
   /// the [fitnessFunction]. This class' [binaryValue] and [fitness] are calculated
@@ -31,6 +32,9 @@ class Chromosome {
 
   @override
   String toString() {
+    if (probability != null) {
+      return '([${pair.x},${pair.y}] | $binaryValue | ${fitness.toStringAsFixed(2)} | ${probability!.toStringAsFixed(2)}%)\n';
+    }
     return '([${pair.x},${pair.y}] | $binaryValue | ${fitness.toStringAsFixed(2)})\n';
   }
 }

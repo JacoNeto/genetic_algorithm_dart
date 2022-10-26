@@ -33,7 +33,7 @@ class GeneticAlgorithm {
   void start() {
     _initializePopulation();
     int i = 0;
-    while (minFitness(population).fitness > 0) {
+    while (minFitness(population).fitness > 1) {
       _sortPopulation();
       _selectParents();
       while (children.length < population!.individuals.length) {
@@ -50,9 +50,15 @@ class GeneticAlgorithm {
   // Initualize the population with chromossomes created from random pair values
   void _initializePopulation() {
     var individuals = <Chromosome>[];
+
     for (int i = 0; i < populationSize; i++) {
       var pair = Pair(generateRandomBetween(0, 8), generateRandomBetween(0, 8));
       individuals.add(Chromosome(pair, i, fitness));
+    }
+
+    for (Chromosome individual in individuals) {
+      individual.probability =
+          calcProbability(individual, List.of(individuals));
     }
 
     print("\nInicializando a População:");
@@ -139,6 +145,10 @@ class GeneticAlgorithm {
   }
 
   void _updatePopulation() {
+    for (Chromosome individual in List.of(children)) {
+      individual.probability =
+          calcProbability(individual, List.of(List.of(children)));
+    }
     population = Population(List.of(children));
   }
 

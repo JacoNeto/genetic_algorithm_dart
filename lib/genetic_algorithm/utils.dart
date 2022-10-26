@@ -35,3 +35,16 @@ Chromosome minFitness(Population? population) {
   return population!.individuals
       .reduce((curr, next) => curr.fitness < next.fitness ? curr : next);
 }
+
+double inverseFit(Chromosome chromosome) {
+  return 1 / chromosome.fitness;
+}
+
+double calcProbability(Chromosome individual, List<Chromosome> individuals) {
+  double chromosomeP = inverseFit(individual);
+  double total = 0;
+  for (Chromosome chromosome in individuals) {
+    total += inverseFit(chromosome);
+  }
+  return (chromosomeP / total) * 100;
+}
