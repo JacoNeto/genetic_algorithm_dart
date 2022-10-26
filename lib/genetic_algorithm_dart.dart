@@ -1,27 +1,32 @@
-import 'dart:developer';
-
+import 'package:ansicolor/ansicolor.dart';
 import 'package:genetic_algorithm_dart/genetic_algorithm/chromosome.dart';
 import 'package:genetic_algorithm_dart/genetic_algorithm/fitness.dart';
 import 'package:genetic_algorithm_dart/genetic_algorithm/population.dart';
 import 'package:genetic_algorithm_dart/genetic_algorithm/utils.dart';
 
 import 'genetic_algorithm/pair.dart';
+import 'dart:math';
 
 int calculate() {
-  GeneticAlgorithm(numberOfGenes: 6, populationSize: 8).start();
+  GeneticAlgorithm(numberOfGenes: 6, populationSize: 8, fitness: fitness)
+      .start();
   return 0;
 }
 
 class GeneticAlgorithm {
   final int numberOfGenes;
   final int populationSize;
+  final double Function(int x, int y) fitness;
 
   Population? population;
   List<Chromosome> parents = [];
   List<Chromosome> children = [];
   int cutIndex = 0;
 
-  GeneticAlgorithm({required this.numberOfGenes, required this.populationSize});
+  GeneticAlgorithm(
+      {required this.numberOfGenes,
+      required this.populationSize,
+      required this.fitness});
 
   void start() {
     _initializePopulation();
@@ -33,9 +38,9 @@ class GeneticAlgorithm {
         _defineCut();
         _crossoverParents();
       }
-      population = Population(children);
-      print("${i + 2}ª geração:\n$population");
-      parents.clear();
+      _updatePopulation();
+      _printGeneration(i + 2, population);
+      _clearGeneration();
     }
   }
 
@@ -124,8 +129,40 @@ class GeneticAlgorithm {
     _printParents();
   }
 
+  void _updatePopulation() {
+    population = Population(List.of(children));
+  }
+
+  void _clearGeneration() {
+    parents.clear();
+    children.clear();
+  }
+
   void _printParents() {
     var auxPop = Population(parents);
     print(auxPop);
+  }
+
+  void _printPopulation() {
+    var minFitness = population!.individuals
+        .reduce((curr, next) => curr.fitness < next.fitness ? curr : next);
+    var indexOfMin = population!.individuals.indexOf(minFitness);
+    print(minFitness.toString() + indexOfMin.toString());
+    var populationLines = population.toString().split('\n');
+
+    AnsiPen pen = AnsiPen()..green(bold: true);
+
+    populationLines[indexOfMin + 1] = pen(populationLines[indexOfMin + 1]);
+
+    for (String splitted in populationLines) {
+      print(splitted);
+    }
+  }
+
+  void _printGeneration(int gen, Population? population) {
+    print("*******************************");
+    print("$genª geração:");
+    _printPopulation();
+    print("*******************************");
   }
 }

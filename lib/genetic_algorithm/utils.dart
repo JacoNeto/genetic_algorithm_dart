@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:ansicolor/ansicolor.dart';
 import 'package:binary/binary.dart';
 import 'package:genetic_algorithm_dart/genetic_algorithm/pair.dart';
 
@@ -23,4 +24,9 @@ Pair binToPair(String binaryValue) {
       binToInt(binaryValue.substring(0, binaryValue.length ~/ 2)),
       binToInt(
           binaryValue.substring(binaryValue.length ~/ 2, binaryValue.length)));
+}
+
+void printGreen(String text) {
+  AnsiPen pen = AnsiPen()..green(bold: true);
+  print(pen(text));
 }
