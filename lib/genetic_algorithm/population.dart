@@ -7,6 +7,7 @@ import 'package:genetic_algorithm_dart/genetic_algorithm/chromosome.dart';
 
 class Population {
   List<Chromosome> individuals;
+  double? sum;
 
   Population(this.individuals);
 
@@ -18,6 +19,14 @@ class Population {
       str += individuals[i].toString();
     }
     return str;
+  }
+
+  double getSum() {
+    double sum = 0;
+    for (Chromosome individual in individuals) {
+      sum += individual.fitness;
+    }
+    return sum;
   }
 
   // sort individuals in decrescent order

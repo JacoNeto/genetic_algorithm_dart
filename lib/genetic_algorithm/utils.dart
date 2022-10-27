@@ -22,6 +22,13 @@ int generateRandomBetween(int min, int max) {
   return min + random.nextInt(max - min);
 }
 
+// random values >= min and < max
+double generateRandomDouble(double max) {
+  final random = Random();
+
+  return random.nextDouble() * max;
+}
+
 // converts an binary value to a [x,y] pair
 Pair binToPair(String binaryValue) {
   return Pair(

@@ -74,10 +74,24 @@ class GeneticAlgorithm {
   // select two chromossomes with most probability to be the parents
   void _selectParents() {
     print("Selecionando pais:");
-    parents.add(population!.individuals[0]);
-    parents.add(population!.individuals[1]);
+
+    parents
+        .add(population!.individuals[_selectParent(population!.individuals)]);
+    parents
+        .add(population!.individuals[_selectParent(population!.individuals)]);
 
     _printParents();
+  }
+
+  int _selectParent(List<Chromosome> individuals) {
+    var rand = generateRandomDouble(population!.getSum());
+    double aux = 0;
+    int i = 0;
+    for (i; (i < population!.individuals.length) && (aux < rand); ++i) {
+      aux += population!.individuals[i].fitness;
+    }
+    i--;
+    return i;
   }
 
   // define randomly the position of the cut to the crossover
